@@ -8,11 +8,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <h1>React Training</h1>
-      <Button
-        variant="contained"
-        href="/todo-list"
-        onClick={() => navigate("todo-list")}
-      >
+      <Button variant="contained" onClick={() => navigate("todo-list")}>
         ToDo List
       </Button>
     </div>

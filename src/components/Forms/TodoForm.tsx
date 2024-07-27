@@ -1,39 +1,75 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
-  TextField,
+  FilledInput,
 } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+interface ITodoData {
+  task_name: string;
+  description: string;
+  priority: number | "";
+  due_date: Date | null;
+}
 
 export default function TodoForm() {
-  const [age, setAge] = React.useState("");
+  const [todoData, setTodoData] = useState<ITodoData>({
+    task_name: "",
+    description: "",
+    priority: "",
+    due_date: null,
+  });
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+  const handleChange = (event: any) => {
+    setTodoData((oldState) => ({
+      ...oldState,
+      [event.target.name]: event.target.value,
+    }));
   };
 
+  const priority_levels = {
+    1: "Very Importent",
+    2: "Importent",
+  };
   return (
     <div>
-      <TextField id="filled-basic" label="Task Name" variant="filled" />
+      <FormControl variant="filled">
+        <InputLabel htmlFor="component-filled">Task Name</InputLabel>
+        <FilledInput
+          id="task_name"
+          name="task_name"
+          value={todoData.task_name}
+          onChange={handleChange}
+          defaultValue="Composed TextField"
+        />
+      </FormControl>
+
       <br />
-      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+      <FormControl variant="filled" sx={{ m: 1, minWidth: 220 }}>
+        <InputLabel id="demo-simple-select-filled-label">Priority</InputLabel>
         <Select
           labelId="demo-simple-select-filled-label"
           id="demo-simple-select-filled"
-          value={age}
+          name="priority"
+          value={todoData.priority.toString()}
           onChange={handleChange}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value="">Select Priority</MenuItem>
+          {Object.entries(priority_levels).map(([priority, name]) => (
+            <MenuItem value={priority} key={priority}>
+              {name}
+            </MenuItem>
+          ))}
         </Select>
+      </FormControl>
+      <FormControl>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Basic date picker" />
+        </LocalizationProvider>
       </FormControl>
     </div>
   );
